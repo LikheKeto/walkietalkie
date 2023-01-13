@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+  - name: Clone github repository
+    git:
+      repo: https://github.com/likheketo/walkietalkie
+      dest: /home/ubuntu/
+      clone: yes
+      update: yes
