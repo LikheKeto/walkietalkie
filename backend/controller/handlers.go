@@ -18,6 +18,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func ConnectToFreq(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received a request to connect!")
 	freq := r.URL.Query().Get("freq")
 	if freq == "" {
 		fmt.Fprintln(w, "Invalid query param")

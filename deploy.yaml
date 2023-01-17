@@ -1,9 +1,15 @@
 ---
 - hosts: all
+  roles:
+    - geerlingguy.docker
   tasks:
   - name: Clone github repository
     git:
       repo: https://github.com/likheketo/walkietalkie
-      dest: /home/ubuntu/
+      dest: /home/ubuntu/walkietalkie
       clone: yes
       update: yes
+  - name: Start backend server
+    shell: 
+      cmd: "docker-compose up"
+      chdir: /home/ubuntu/walkietalkie/backend
