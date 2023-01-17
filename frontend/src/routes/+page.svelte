@@ -40,7 +40,7 @@
 				}
 
 				// send request to backend
-				ws = new WebSocket(`ws://localhost:8080/connect?freq=${value}`);
+				ws = new WebSocket(`ws://35.79.227.8:8080/connect?freq=${value}`);
 				ws.addEventListener('open', () => {
 					ws.send(JSON.stringify({ join: 'true' }));
 				});

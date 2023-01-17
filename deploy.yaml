@@ -11,6 +11,6 @@
       clone: yes
       update: yes
   - name: Start backend server
-    shell: 
-      cmd: "docker-compose up"
+    shell:
+      cmd: "docker-compose up -d"
       chdir: /home/ubuntu/walkietalkie/backend
