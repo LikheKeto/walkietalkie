@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PageServerData } from './$types';
 
+	export let data: PageServerData;
+	let serverUrl = data.serverUrl;
 	let blinker = false;
 	let value = 0;
 
@@ -16,56 +19,59 @@
 	let peerRef: RTCPeerConnection;
 
 	onMount(async () => {
-
 		navigator.mediaDevices.getUserMedia({ audio: true }).then((mediaStream) => {
-
 			userStream = mediaStream;
 			peerStream = userStream.clone();
 			peerStream.removeTrack(peerStream.getTracks()[0]);
-			document.querySelector('audio').srcObject = peerStream;
+			let audioEl = document.querySelector('audio');
+			if (audioEl) {
+				audioEl.srcObject = peerStream;
+			}
 		});
 	});
-
-	let once = false;
 
 	let prevTimeoutID: NodeJS.Timeout;
 	$: {
 		if (value > 0) {
-			clearTimeout(prevTimeoutID);
-			prevTimeoutID = setTimeout(() => {
-				if (!once) {
-					once = true;
-				} else {
-					return;
-				}
-
-				// send request to backend
-				ws = new WebSocket(`wss://wtapi.jivanparajuli.com.np/connect?freq=${value}`);
-				ws.addEventListener('open', () => {
-					ws.send(JSON.stringify({ join: 'true' }));
-				});
-				ws.addEventListener('message', async (msg) => {
-					const message = JSON.parse(msg.data);
-					if (message.join) {
-						joinFreq();
-					}
-					if (message.iceCandidate) {
-						try {
-							await peerRef.addIceCandidate(message.iceCandidate);
-						} catch (err) {
-							console.log(err);
-						}
-					}
-					if (message.offer) {
-						await handleOffer(message.offer);
-					}
-					if (message.answer) {
-						peerRef.setRemoteDescription(new RTCSessionDescription(message.answer));
-					}
-				});
-			}, 2000);
+			if (prevTimeoutID) {
+				clearTimeout(prevTimeoutID);
+			}
+			prevTimeoutID = setTimeout(sendWSRequest, 2000);
 		}
 	}
+
+	const sendWSRequest = () => {
+		if (ws) {
+			ws.close();
+		}
+		if (peerRef) {
+			peerRef.close();
+		}
+		// send request to backend
+		ws = new WebSocket(`${serverUrl}/connect?freq=${value}`);
+		ws.addEventListener('open', () => {
+			ws.send(JSON.stringify({ join: 'true' }));
+		});
+		ws.addEventListener('message', async (msg) => {
+			const message = JSON.parse(msg.data);
+			if (message.join) {
+				joinFreq();
+			}
+			if (message.iceCandidate) {
+				try {
+					await peerRef.addIceCandidate(message.iceCandidate);
+				} catch (err) {
+					console.log(err);
+				}
+			}
+			if (message.offer) {
+				await handleOffer(message.offer);
+			}
+			if (message.answer) {
+				peerRef.setRemoteDescription(new RTCSessionDescription(message.answer));
+			}
+		});
+	};
 
 	const handleOffer = async (offer: any) => {
 		peerRef = createPeer();
@@ -172,5 +178,5 @@
 			/>
 		</div>
 	</div>
-	<audio autoplay src="" />
+	<audio autoplay />
 </div>

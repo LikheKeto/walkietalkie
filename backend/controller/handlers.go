@@ -40,12 +40,15 @@ func ConnectToFreq(w http.ResponseWriter, r *http.Request) {
 		err := conn.ReadJSON(&msg.message)
 		if websocket.IsCloseError(err, 1001) {
 			log.Printf("A client left freq - %f", floatFreq)
+			AllRooms.RemoveFromRoom(floatFreq, conn)
 			conn.Close()
 			break
 		}
 		if err != nil {
+			AllRooms.RemoveFromRoom(floatFreq, conn)
 			conn.Close()
 			log.Print(err)
+			break
 		}
 		msg.client.Conn = conn
 		msg.freq = floatFreq
