@@ -4,13 +4,13 @@
   roles:
     - geerlingguy.docker
   tasks:
-  - name: Clone github repository
-    git:
-      repo: https://github.com/likheketo/walkietalkie
-      dest: /home/ubuntu/walkietalkie
-      clone: yes
-      update: yes
-  - name: Start backend server
-    shell:
-      cmd: "docker-compose down && docker-compose up -d"
-      chdir: /home/ubuntu/walkietalkie/backend
+    - name: Clone github repository
+      git:
+        repo: https://github.com/likheketo/walkietalkie
+        dest: /home/ubuntu/walkietalkie
+        clone: yes
+        update: yes
+    - name: Start backend server
+      shell:
+        cmd: "docker-compose up --build --no-deps --force-recreate -d"
+        chdir: /home/ubuntu/walkietalkie/backend
