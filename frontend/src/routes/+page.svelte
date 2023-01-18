@@ -40,7 +40,7 @@
 				}
 
 				// send request to backend
-				ws = new WebSocket(`wss://35.79.227.8:8080/connect?freq=${value}`);
+				ws = new WebSocket(`wss://wtapi.jivanparajuli.com.np/connect?freq=${value}`);
 				ws.addEventListener('open', () => {
 					ws.send(JSON.stringify({ join: 'true' }));
 				});
