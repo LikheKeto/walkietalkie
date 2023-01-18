@@ -20,6 +20,7 @@ jobs:
         with:
           playbook: deploy.yaml
           directory: ./
+          requirements: galaxy-requirements.yaml
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [servers]
