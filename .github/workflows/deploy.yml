@@ -1,13 +1,27 @@
-- name: Deploy backend
-  uses: dawidd6/action-ansible-playbook@v2
-  with:
-  playbook: deploy.yaml
-  directory: ./
-  key: ${{secrets.SSH_PRIVATE_KEY}}
-  inventory: |
-    [servers]
-    server1 ansible_host=35.79.227.8 ansible_ssh_private_key_file=~/.ssh/likheketo.pem
+name: Deploy backend server
 
-    [all:vars]
-    ansible_python_interpreter=/usr/bin/python3
-    ansible_user=ubuntu
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run ansible playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: deploy.yaml
+          directory: ./
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [servers]
+            server1 ansible_host=35.79.227.8 ansible_ssh_private_key_file=~/.ssh/likheketo.pem
+
+            [all:vars]
+            ansible_python_interpreter=/usr/bin/python3
+            ansible_user=ubuntu
