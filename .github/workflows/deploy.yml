@@ -24,7 +24,7 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [servers]
-            server1 ansible_host=35.79.227.8 ansible_ssh_private_key_file=~/.ssh/likheketo.pem
+            server1 ansible_host=35.79.227.8
 
             [all:vars]
             ansible_python_interpreter=/usr/bin/python3
