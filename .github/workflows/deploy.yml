@@ -1,10 +1,10 @@
-name: Deploy Backend Server
+name: Deploy backend server
 
 on:
-  push:
-    branches: [deploy-workflow]
-  pull_request:
-    branches: [deploy-workflow]
+  workflow_run:
+    workflows: ["Run unit tests"]
+    types:
+      - completed
 
 jobs:
   deploy:
