@@ -1,13 +1,13 @@
-name: Deploy backend server
+name: Deploy Backend Server
 
 on:
   push:
-    branches: [main]
+    branches: [deploy-workflow]
   pull_request:
-    branches: [main]
+    branches: [deploy-workflow]
 
 jobs:
-  test:
+  deploy:
     name: deploy
     runs-on: ubuntu-latest
 
@@ -19,7 +19,6 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: deploy.yaml
-          directory: ./
           requirements: galaxy-requirements.yaml
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: ${{secrets.ANSIBLE_INVENTORY}}
