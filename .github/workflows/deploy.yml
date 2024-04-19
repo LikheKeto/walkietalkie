@@ -5,6 +5,8 @@ on:
     workflows: ["Run unit tests"]
     types:
       - completed
+  # Add event dispatch trigger
+  workflow_dispatch:
 
 jobs:
   deploy:
